@@ -1,0 +1,70 @@
+# Dies ist das Schmüpf-Spiel
+# Hierbei handelt es sich um ein Spiel aus dem viel Zärtlichkeit 
+# und Spaß entsteht.
+# Hier wird gekuschelt, geküsst, geflüstert, umarmt, gesungen und 
+# ein paar sportliche Aktivitäten gibt es auch.
+
+# Man braucht:
+# - von jedem Spieler ein kleines Bild
+# - einen Würfel 1-3 
+# - 3 - 5 Figuren
+# - 3 - 5 Spieler (2 gehen zur Not auch)
+
+# Variablen
+# Spielerauswahl
+# - $roterSpieler:=0
+# - $blauerSpieler:=0
+# - $gelberSpieler:=0
+# - $gruenerSpieler:=0
+# - $rosaSpieler:=0
+# - $anzahlSpieler:=0
+# - $stern:=0
+# - $ini:=0
+product-id: 904
+media-path: SchmuepfSpiel/%s
+welcome: willkommen
+
+scripts:
+ anleitung:
+ # Tippe auf den Stern um die Spieler auszuwählen:
+  - $stern:=1 P(tippe_auf_die_spieler)
+  # Tippe nacheinander auf die farbigen Herzen der Spieler danach 
+  # auf den Stern.
+ roterSpieler:
+  - $stern==1? $anzahlSpieler+=1 $roterSpieler:=1 P(roterSpieler) P(spielt_mit)
+ blauerSpieler:
+  - $stern==1? $anzahlSpieler+=1 $blauerSpieler:=1 P(blauerSpieler) P(spielt_mit)
+ gelberSpieler:
+  - $stern==1? $anzahlSpieler+=1 $gelberSpieler:=1 P(gelberSpieler) P(spielt_mit)
+ gruenerSpieler:
+  - $stern==1? $anzahlSpieler+=1 $gruenerSpieler:=1 P(gruenerSpieler) P(spielt_mit)
+ rosaSpieler:
+  - $stern==1? $anzahlSpieler+=1 $rosaSpieler:=1 P(rosaSpieler) P(spielt_mit)
+ stern:
+  - $stern==1? $ini:=1 J(mitSpielerAnzahl)
+# Ansage der Mitspieler
+ mitSpielerAnzahl:
+  - $anzahlSpieler==0? P(spieler_auswaehlen) J(anleitung)
+  - $anzahlSpieler==1? P(spieler_auswaehlen) J(anleitung) 
+  - $anzahlSpieler==2? P(zweiSpieler)
+  - $anzahlSpieler==3? P(dreiSpieler)
+  - $anzahlSpieler==4? P(vierSpieler)
+  - $anzahlSpieler==5? P(fuenfSpieler)
+
+speak:
+ willkommen: "Willkommen im Schmüpf Spiel. Hier wird gekuschelt"
+ spielt_mit: "spielt mit"
+ roterSpieler: "Der rote Spieler"
+ blauerSpieler: "Der blaue Spieler"
+ gelberSpieler: "Der gelbe Spieler"
+ gruenerSpieler: "Der gruene Spieler"
+ rosaSpieler: "Der rosa Spieler"
+ # anzahlSpieler
+ zweiSpieler: "Ihr seid zu zweit"
+ dreiSpieler: "Ihr spielt zu dritt"
+ vierSpieler: "Ihr spielt zu viert"
+ fuenfSpieler: "Uhh ein volles Haus"
+ # anleitung
+ tippe_auf_die_spieler: "Tippe auf die Herzen der Spieler die Mitspielen"
+ spieler_auswaehlen: "Zuwenig Spieler"
+ 
