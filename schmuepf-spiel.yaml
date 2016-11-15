@@ -12,59 +12,97 @@
 
 # Variablen
 # Spielerauswahl
-# - $roterSpieler:=0
-# - $blauerSpieler:=0
-# - $gelberSpieler:=0
-# - $gruenerSpieler:=0
-# - $rosaSpieler:=0
+# - $roterSpieler:=0 Spieler 1
+# - $blauerSpieler:=0 Spieler 2
+# - $gelberSpieler:=0 Spieler 3
+# - $gruenerSpieler:=0 Spieler 4
+# - $rosaSpieler:=0 Spieler 5
 # - $anzahlSpieler:=0
-# - $stern:=0
-# - $ini:=0
+
+# - $stern:=0 Initialisierung/Spielerauswahl in Gange wenn 1
+# - $ini:=0 Initialisierung abgeschlossen wenn 1-3
+
+# Zählschleife um die spieler in den Zufallsgenerator zu packen.
+# - $zufallsschleife:=0
+# - $zufallsspieler_1:=0 
+# - $zufallsspieler_2:=0
+# - $zufallsspieler_3:=0
+# - $zufallsspieler_4:=0
+
+# Im Spiel
+# - $aktion_offen:=0 gibt an ob die auszuführende Aktion erledigt ist.
+# - $spielerIDimSpiel:=0 SpielerID 1-5 das sind die IDs der Spieler
+
 product-id: 904
 media-path: SchmuepfSpiel/%s
 welcome: willkommen
 
 scripts:
- anleitung:
- # Tippe auf den Stern um die Spieler auszuwählen:
-  - $stern:=1 P(tippe_auf_die_spieler)
+# Spieler auswählen setzt die Variable um die Spielerauswahl zu erlauben
+ spieler_auswaehlen:
   # Tippe nacheinander auf die farbigen Herzen der Spieler danach 
   # auf den Stern.
+  - $stern:=1 P(tippe_auf_die_spieler)
+
+# Die Spieler
+# 1. Zeile ist für die Spielerauswahl
+# 2. Zeile fängt doppeleingaben ab.
+# 3. Im Spiel#
+
  roterSpieler:
-  - $stern==1? $anzahlSpieler+=1 $roterSpieler:=1 P(roterSpieler) P(spielt_mit)
+  - $stern==1? $anzahlSpieler+=1 $roterSpieler:=1 P(10000) P(spielt_mit)
+  - $stern==1? $roterSpieler==1? P(spieler_schon_gewaehlt)
+  - $stern==0? $ini==1? $aktion_offen==0? $spielerIDimSpiel:=1 P(10000) P(ist_dran)
  blauerSpieler:
-  - $stern==1? $anzahlSpieler+=1 $blauerSpieler:=1 P(blauerSpieler) P(spielt_mit)
+  - $stern==1? $anzahlSpieler+=1 $blauerSpieler:=2 P(20000) P(spielt_mit)
+  - $stern==1? $blauerSpieler==2? P(spieler_schon_gewaehlt)
+  - $stern==0? $ini==1? $aktion_offen==0? $spielerIDimSpiel:=1 P(20000) P(ist_dran)
  gelberSpieler:
-  - $stern==1? $anzahlSpieler+=1 $gelberSpieler:=1 P(gelberSpieler) P(spielt_mit)
+  - $stern==1? $anzahlSpieler+=1 $gelberSpieler:=3 P(30000) P(spielt_mit)
+  - $stern==1? $gelberSpieler==3? P(spieler_schon_gewaehlt)
+  - $stern==0? $ini==1? $aktion_offen==0? $spielerIDimSpiel:=1 P(30000) P(ist_dran)
  gruenerSpieler:
-  - $stern==1? $anzahlSpieler+=1 $gruenerSpieler:=1 P(gruenerSpieler) P(spielt_mit)
+  - $stern==1? $anzahlSpieler+=1 $gruenerSpieler:=4 P(40000) P(spielt_mit)
+  - $stern==1? $gruenerSpieler==4? P(spieler_schon_gewaehlt)
+  - $stern==0? $ini==1? $aktion_offen==0? $spielerIDimSpiel:=1 P(40000) P(ist_dran)
  rosaSpieler:
-  - $stern==1? $anzahlSpieler+=1 $rosaSpieler:=1 P(rosaSpieler) P(spielt_mit)
- stern:
-  - $stern==1? $ini:=1 J(mitSpielerAnzahl)
+  - $stern==1? $anzahlSpieler+=1 $rosaSpieler:=5 P(50000) P(spielt_mit)
+  - $stern==1? $rosaSpieler==5? P(spieler_schon_gewaehlt)
+  - $stern==0? $ini==1? $aktion_offen==0? $spielerIDimSpiel:=1 P(50000) P(ist_dran)
+ startfeld:
+  - $stern==1? $stern:=0 $ini:=1 J(mitSpielerAnzahl)
+  
 # Ansage der Mitspieler
  mitSpielerAnzahl:
-  - $anzahlSpieler==0? P(spieler_auswaehlen) J(anleitung)
-  - $anzahlSpieler==1? P(spieler_auswaehlen) J(anleitung) 
+ # Im Bereich anzahlSpieler 0-2 müssen weitere Instruktionen folgen. 
+  - $anzahlSpieler==0? P(tippe_auf_die_spieler) J(spieler_auswaehlen)
+  - $anzahlSpieler==1? P(tippe_auf_die_spieler) J(spieler_auswaehlen) 
   - $anzahlSpieler==2? P(zweiSpieler)
   - $anzahlSpieler==3? P(dreiSpieler)
   - $anzahlSpieler==4? P(vierSpieler)
   - $anzahlSpieler==5? P(fuenfSpieler)
-
+# fuelle Zufallsgenerator mit SpielerIDs
+ fuelleZufallsgenerator:
+  - zufallsspieler_1==0? anzahlSpieler>0 J(abfrageSpieler1)
+ abfrageSpieler1:
+  - zufallsspieler_1==0? $roterSpieler>0? zufallsspieler_1==$roterSpieler
+  
+    
 speak:
  willkommen: "Willkommen im Schmüpf Spiel. Hier wird gekuschelt"
+ #Spielernamen
  spielt_mit: "spielt mit"
- roterSpieler: "Der rote Spieler"
- blauerSpieler: "Der blaue Spieler"
- gelberSpieler: "Der gelbe Spieler"
- gruenerSpieler: "Der gruene Spieler"
- rosaSpieler: "Der rosa Spieler"
+ 10000: "Der rote Spieler"
+ 20000: "Der blaue Spieler"
+ 30000: "Der gelbe Spieler"
+ 40000: "Der gruene Spieler"
+ 50000: "Der rosa Spieler"
+ ist_dran: " ist an der Reihe."
  # anzahlSpieler
  zweiSpieler: "Ihr seid zu zweit"
  dreiSpieler: "Ihr spielt zu dritt"
  vierSpieler: "Ihr spielt zu viert"
  fuenfSpieler: "Uhh ein volles Haus"
- # anleitung
- tippe_auf_die_spieler: "Tippe auf die Herzen der Spieler die Mitspielen"
- spieler_auswaehlen: "Zuwenig Spieler"
- 
+ # Initialisierung
+ tippe_auf_die_spieler: "Tippe auf die Herzen der Spieler die Mitspielen" 
+ spieler_schon_gewaehlt: "Dieser Spieler wurde bereits ausgewählt"
